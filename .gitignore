@@ -43,3 +43,23 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Python virtual environment
+venv/
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Flask specific
+instance/
+*.sqlite3
+
+# VSCode settings (si quieres ignorarlos también)
+.vscode/
+
+# PostgreSQL dumps or backups (opcional)
+*.sql
+*.dump
