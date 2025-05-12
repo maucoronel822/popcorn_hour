@@ -70,6 +70,25 @@ class _SignupPageState extends State<SignupPage>{
                 color: Colors.white
                 ),
                 decoration: InputDecoration(
+                icon:Icon(Icons.person, color: const Color.fromARGB(255, 255, 255, 255)),
+                labelText: 'Apellido', fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.white
+                    ),
+                  )
+                )
+              )
+            ),
+            SizedBox(height: 10),
+            SizedBox(
+              width: 350,
+              height: 70,
+              child: TextField(
+                style: TextStyle(
+                color: Colors.white
+                ),
+                decoration: InputDecoration(
                 icon:Icon(Icons.account_circle, color: const Color.fromARGB(255, 255, 255, 255)),
                 labelText: 'Nombre de usuario', fillColor: Colors.white,
                 border: OutlineInputBorder()
@@ -103,7 +122,8 @@ class _SignupPageState extends State<SignupPage>{
                 icon:Icon(Icons.lock, color: const Color.fromARGB(255, 255, 255, 255)),
                 labelText: 'Contraseña', fillColor: Colors.white,
                 border: OutlineInputBorder()
-                )
+                ),
+                obscureText: true,
               )
             ),
             SizedBox(height: 10),
