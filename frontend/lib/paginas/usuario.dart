@@ -407,7 +407,7 @@ class _PaginaUsuarioState extends State<PaginaUsuario> {
             ElevatedButton(
               onPressed: () {
                 // Aquí navegas a la página de agregar película
-                Navigator.pushNamed(context, '/agregarPelicula');
+                Navigator.pushNamed(context, '/agregar_pelicula');
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(200, 50),
