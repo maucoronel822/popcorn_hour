@@ -10,6 +10,13 @@ class Pelicula extends StatefulWidget {
 }
 
 class _Pelicula extends State<Pelicula>{
+  // Variables para almacenar los datos de la película
+  String titulo = '';
+  String sinopsis = '';
+  double calificacion = 0.0;
+  String usuario = '';
+  String resena = '';
+
 
   @override
   Widget build (BuildContext context){

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -10,6 +13,40 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage>{
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _apellidoController = TextEditingController();
+  final TextEditingController _usuarioController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _contrasenaController = TextEditingController();
+  // Método para manejar el registro de usuario
+
+  Future<void> registrarUsuario() async {
+    final url = Uri.parse('http://127.0.0.1:5000/signup');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'nombre': _nombreController.text,
+        'apellido': _apellidoController.text,
+        'nombre_usuario': _usuarioController.text,
+        'email': _emailController.text,
+        'contrasena': _contrasenaController.text,
+      })
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // Registro exitoso
+      Navigator.pushNamed(context, '/login');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Usuario registrado exitosamente')),
+      );
+    } else {
+      // Manejo de errores
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al registrar usuario')),
+      );
+    }
+  }
 
   @override
   Widget build (BuildContext context){
@@ -47,6 +84,7 @@ class _SignupPageState extends State<SignupPage>{
               width: 350,
               height: 70,
               child: TextField(
+                controller: _nombreController,
                 style: TextStyle(
                 color: Colors.white
                 ),
@@ -66,6 +104,7 @@ class _SignupPageState extends State<SignupPage>{
               width: 350,
               height: 70,
               child: TextField(
+                controller: _apellidoController,
                 style: TextStyle(
                 color: Colors.white
                 ),
@@ -85,6 +124,7 @@ class _SignupPageState extends State<SignupPage>{
               width: 350,
               height: 70,
               child: TextField(
+                controller: _usuarioController,
                 style: TextStyle(
                 color: Colors.white
                 ),
@@ -100,6 +140,7 @@ class _SignupPageState extends State<SignupPage>{
               width: 350,
               height: 70,
               child: TextField(
+                controller: _emailController,
                 style: TextStyle(
                 color: Colors.white
                 ),
@@ -115,6 +156,7 @@ class _SignupPageState extends State<SignupPage>{
               width: 350,
               height: 70,
               child: TextField(
+                controller: _contrasenaController,
                 style: TextStyle(
                 color: Colors.white
                 ),
@@ -129,7 +171,7 @@ class _SignupPageState extends State<SignupPage>{
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/user');
+                registrarUsuario();
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(200, 50),
