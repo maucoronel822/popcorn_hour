@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configuración de la base de datos PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://your_username:your_password@localhost/popcorn_hour'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:MCoronelL99@localhost/popcorn_hour'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializar la base de datos

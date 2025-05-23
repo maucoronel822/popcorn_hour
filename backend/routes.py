@@ -4,11 +4,48 @@ from datetime import datetime
 from flask import request, jsonify
 
 # Habilitar CORS para permitir solicitudes desde otros dominios
-CORS(app)
 
 @app.route('/')
 def index():
     return "Welcome to the Popcorn Hour API!"
+
+@app.route('/login', methods = ['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    contrasena = data.get('contrasena')
+
+    usuario = Usuarios.query.filter_by(email=email).first()
+    if usuario and usuario.contrasena == contrasena:
+        return jsonify({'message': 'Login exitoso', 'usuario_id': usuario.id}), 200
+    else:
+        return jsonify({'error': 'Credenciales inválidas'}), 401
+
+@app.route("/signup", methods=["POST"])
+def signup():
+    data = request.get_json()
+    nombre = data.get("nombre")
+    apellido = data.get("apellido")
+    nombre_usuario = data.get("nombre_usuario")
+    email = data.get("email")
+    contrasena = data.get("contrasena")
+
+    if Usuarios.query.filter_by(email=email).first():
+        return jsonify({"mensaje": "Correo ya registrado"}), 400
+
+    nuevo_usuario = Usuarios(
+        nombre=nombre,
+        apellido=apellido,
+        email=email,
+        nombre_usuario=nombre_usuario,
+        contrasena=contrasena,
+        fecha_registro=datetime.utcnow()
+    )
+
+    db.session.add(nuevo_usuario)
+    db.session.commit()
+
+    return jsonify({"mensaje": "Usuario registrado correctamente"}), 201
 
 @app.route('/peliculas', methods=['GET'])
 def obtener_peliculas():
@@ -23,18 +60,35 @@ def obtener_pelicula(pelicula_id):
 @app.route('/peliculas', methods=['POST'])
 def agregar_pelicula():
     data = request.get_json()
-    new_movie = Peliculas(
-        titulo=data['titulo'],
-        anio=data['anio'],
-        genero=data['genero'],
-        director=data['director'],
-        sinopsis=data['sinopsis'],
-        calificacion=data['calificacion'],
-        fecha_agregado=datetime.utcnow()
-    )
-    db.session.add(new_movie)
-    db.session.commit()
-    return new_movie.to_dict(), 201
+
+    campos_requeridos = ['titulo', 'anio', 'genero', 'director', 'sinopsis', 'calificacion']
+    for campo in campos_requeridos:
+        if campo not in data or data[campo] == '':
+            return jsonify({'error': f'El campo "{campo}" es obligatorio y no puede estar vacío'}), 400
+
+    try:
+        anio = int(data['anio'])
+        calificacion = float(data['calificacion'])
+    except ValueError:
+        return jsonify({'error': 'El campo "anio" debe ser un número entero y "calificacion" debe ser un número decimal'}), 400
+
+    try:
+        new_movie = Peliculas(
+            titulo=data['titulo'],
+            anio=anio,
+            genero=data['genero'],
+            director=data['director'],
+            sinopsis=data['sinopsis'],
+            calificacion=calificacion,
+            fecha_agregado=datetime.utcnow()
+        )
+        db.session.add(new_movie)
+        db.session.commit()
+        return jsonify(new_movie.to_dict()), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/peliculas/<int:pelicula_id>', methods=['PUT'])
 def actualizar_pelicula(pelicula_id):
